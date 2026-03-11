@@ -1,10 +1,9 @@
 import pytest
-
-from src.utils.spark_utils import create_spark_session
+from pyspark.sql import SparkSession
 
 
 @pytest.fixture(scope="session")
 def spark():
-    spark = create_spark_session("nyc-taxi-tests")
+    spark = SparkSession.builder.appName("nyc-taxi-tests").master("local[2]").getOrCreate()
     yield spark
     spark.stop()
