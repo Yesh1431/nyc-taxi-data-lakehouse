@@ -1,9 +1,33 @@
 from pyspark.sql import Row
+from pyspark.sql.types import (
+    DoubleType,
+    IntegerType,
+    StringType,
+    StructField,
+    StructType,
+)
 
 from src.quality.checks import run_trip_quality_checks
 
 
 def test_quality_checks_detect_bad_rows(spark):
+    schema = StructType(
+        [
+            StructField("pickup_location_id", IntegerType(), True),
+            StructField("dropoff_location_id", IntegerType(), True),
+            StructField("payment_type", IntegerType(), True),
+            StructField("rate_code_id", IntegerType(), True),
+            StructField("pickup_ts", StringType(), True),
+            StructField("dropoff_ts", StringType(), True),
+            StructField("fare_amount", DoubleType(), True),
+            StructField("trip_distance", DoubleType(), True),
+            StructField("pickup_zone", StringType(), True),
+            StructField("dropoff_zone", StringType(), True),
+            StructField("trip_duration_minutes", DoubleType(), True),
+            StructField("trip_speed_mph", DoubleType(), True),
+        ]
+    )
+
     df = spark.createDataFrame(
         [
             Row(
@@ -20,7 +44,8 @@ def test_quality_checks_detect_bad_rows(spark):
                 trip_duration_minutes=-5.0,
                 trip_speed_mph=120.0,
             )
-        ]
+        ],
+        schema=schema,
     )
     config = {
         "quality": {"accepted_payment_types": [1, 2], "accepted_rate_codes": [1, 2]},
