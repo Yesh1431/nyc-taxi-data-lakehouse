@@ -22,6 +22,7 @@ City mobility and operations teams need consistent, trusted metrics around taxi 
 - `sql/` - business reporting SQL queries
 - `tests/` - unit tests for ingestion, quality, and transformation logic
 - `docs/` - architecture documentation
+- `notebooks/` - Jupyter quickstart and interactive exploration
 - `data/{raw,bronze,silver,gold}` - local storage layers
 
 ## Data sources
@@ -35,6 +36,23 @@ source .venv/bin/activate
 pip install -r requirements.txt
 python -m src.orchestration.pipeline --start-month 2024-01 --end-month 2024-03
 ```
+
+
+## Run in Jupyter Notebook
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+jupyter notebook
+```
+
+Then open:
+- `notebooks/nyc_taxi_lakehouse_quickstart.ipynb`
+
+Notebook flow:
+1. Install project dependencies inside the kernel
+2. Run `run_pipeline(...)` for the selected month range
+3. Read Delta gold marts directly with Spark for exploration
 
 ## Run tests
 ```bash
