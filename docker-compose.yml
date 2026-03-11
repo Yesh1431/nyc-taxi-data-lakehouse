@@ -1,0 +1,8 @@
+version: '3.9'
+services:
+  lakehouse:
+    build: .
+    container_name: nyc-taxi-demand-revenue-lakehouse
+    volumes:
+      - ./:/app
+    command: ["python", "-m", "src.orchestration.pipeline", "--start-month", "2024-01", "--end-month", "2024-01"]
