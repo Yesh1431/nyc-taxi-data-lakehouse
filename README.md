@@ -76,3 +76,7 @@ docker compose up --build
 
 ## Notes for cloud adaptation
 The codebase is config-driven and layered, so the same patterns map cleanly to Databricks jobs, ADLS/S3 object storage, external metastore tables, and orchestration frameworks like Airflow.
+
+## Dashboard assets
+- `dashboards/README.md` for dashboard page design and metric mapping
+- `dashboards/nyc_taxi_dashboard_queries.sql` for dashboard-ready datasets
