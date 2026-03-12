@@ -7,6 +7,7 @@ City mobility and operations teams need consistent, trusted metrics around taxi 
 
 ## Tech stack
 - Python 3.13.9
+- PySpark 3.5
 - PySpark 4.0
 - Delta Lake (`delta-spark`)
 - SQL analytics
