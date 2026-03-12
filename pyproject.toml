@@ -1,3 +1,8 @@
+[project]
+name = "nyc-taxi-data-lakehouse"
+version = "0.1.0"
+requires-python = "==3.13.9"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
