@@ -6,8 +6,8 @@ Production-style end-to-end data engineering project that ingests NYC TLC yellow
 City mobility and operations teams need consistent, trusted metrics around taxi demand and revenue by zone and borough. This repository demonstrates a practical local lakehouse implementation with modular ingestion, transformations, quality checks, orchestration, testing, and CI.
 
 ## Tech stack
-- Python 3.11
-- PySpark 3.5
+- Python 3.13.9
+- PySpark 4.0
 - Delta Lake (`delta-spark`)
 - SQL analytics
 - PyTest
