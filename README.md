@@ -6,8 +6,7 @@ Production-style end-to-end data engineering project that ingests NYC TLC yellow
 City mobility and operations teams need consistent, trusted metrics around taxi demand and revenue by zone and borough. This repository demonstrates a practical local lakehouse implementation with modular ingestion, transformations, quality checks, orchestration, testing, and CI.
 
 ## Tech stack
-- Python 3.13.9
-- PySpark 3.5
+- Python 3.10+ (recommended: 3.11–3.13)
 - PySpark 4.0
 - Delta Lake (`delta-spark`)
 - SQL analytics
@@ -30,19 +29,39 @@ City mobility and operations teams need consistent, trusted metrics around taxi 
 1. NYC TLC trip records: https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
 2. Taxi zone lookup table
 
-## How to run locally
+## How to run locally (any IDE)
+Use whichever environment manager your IDE supports (venv/conda/poetry/uv). The key requirement is Python 3.10+ and installing `requirements.txt`.
+
+### Option A: venv (Linux/macOS)
 ```bash
 python -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 python -m src.orchestration.pipeline --start-month 2024-01 --end-month 2024-03
 ```
 
+### Option B: venv (Windows PowerShell)
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+python -m src.orchestration.pipeline --start-month 2024-01 --end-month 2024-03
+```
+
+### Option C: Conda
+```bash
+conda create -n nyc-taxi-lakehouse python=3.11 -y
+conda activate nyc-taxi-lakehouse
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+python -m src.orchestration.pipeline --start-month 2024-01 --end-month 2024-03
+```
 
 ## Run in Jupyter Notebook
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 jupyter notebook
 ```
@@ -54,6 +73,16 @@ Notebook flow:
 1. Install project dependencies inside the kernel
 2. Run `run_pipeline(...)` for the selected month range
 3. Read Delta gold marts directly with Spark for exploration
+
+
+## Dependency compatibility notes
+- `requests` is intentionally specified as `>=2.32.4,<3.0.0` to stay compatible with managed notebook environments (for example Colab/ADK) that require `2.32.4+`.
+- If your IDE reports resolver warnings, run:
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+pip check
+```
 
 ## Run tests
 ```bash
