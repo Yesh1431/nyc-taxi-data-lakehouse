@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime
+from datetime import UTC, datetime
 
 from src.ingestion.tlc_ingestion import (
     ingest_taxi_zone_lookup,
@@ -22,7 +22,7 @@ logger = get_logger(__name__)
 def run_pipeline(config_path: str, start_month: str | None, end_month: str | None) -> None:
     config = load_config(config_path)
     spark = create_spark_session(config["app"]["name"])
-    batch_id = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    batch_id = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
 
     start = start_month or config["processing"]["default_start_month"]
     end = end_month or config["processing"]["default_end_month"]
