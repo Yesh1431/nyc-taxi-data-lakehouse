@@ -84,6 +84,27 @@ pip install -r requirements.txt
 pip check
 ```
 
+## Delta troubleshooting ("Failed to find data source: delta")
+If you see `DATA_SOURCE_NOT_FOUND` / `ClassNotFoundException: delta.DefaultSource`, your notebook likely started a plain Spark session without Delta extensions.
+
+Use the project helper before any Delta reads/writes:
+
+```python
+from src.utils.spark_utils import ensure_delta_spark_session
+
+spark = ensure_delta_spark_session("nyc-taxi-lakehouse-notebook")
+fact_taxi_trips_df = spark.read.format("delta").load("data/gold/fact_taxi_trips")
+fact_taxi_trips_df.printSchema()
+fact_taxi_trips_df.show(20, truncate=False)
+```
+
+If dependency resolution is blocked in your environment, preinstall requirements and restart the kernel/runtime:
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
 ## Run tests
 ```bash
 pytest -q
