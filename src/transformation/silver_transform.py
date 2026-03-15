@@ -7,6 +7,27 @@ from src.utils.logging_utils import get_logger
 logger = get_logger(__name__)
 
 
+def apply_trip_quality_filters(df, config: dict):
+    """Apply quality-driven row filters so silver data satisfies validator rules."""
+    rules = config["quality"]
+    max_hours = config["processing"]["max_reasonable_trip_hours"]
+    max_speed = config["processing"]["max_reasonable_trip_speed_mph"]
+
+    return (
+        df.filter(F.col("pickup_location_id").isNotNull() & F.col("dropoff_location_id").isNotNull())
+        .filter(F.col("payment_type").isin(rules["accepted_payment_types"]))
+        .filter(F.col("rate_code_id").isin(rules["accepted_rate_codes"]))
+        .filter(F.col("pickup_ts") < F.col("dropoff_ts"))
+        .filter((F.col("fare_amount") >= 0) & (F.col("trip_distance") >= 0))
+        .filter(F.col("pickup_zone").isNotNull() & F.col("dropoff_zone").isNotNull())
+        .filter(
+            (F.col("trip_duration_minutes") > 0)
+            & (F.col("trip_duration_minutes") <= max_hours * 60)
+            & (F.col("trip_speed_mph") <= max_speed)
+        )
+    )
+
+
 def build_silver_trips(spark, config: dict, run_months: list[str] | None = None) -> None:
     bronze_trip_path = f"{config['storage']['bronze_path']}/yellow_trips"
     bronze_zone_path = f"{config['storage']['bronze_path']}/taxi_zones"
@@ -94,6 +115,8 @@ def build_silver_trips(spark, config: dict, run_months: list[str] | None = None)
             "do_location_id",
         )
     )
+
+    silver = apply_trip_quality_filters(silver, config)
 
     spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
     (
